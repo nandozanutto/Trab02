@@ -9,6 +9,16 @@ int main(int argc, char const *argv[]) {
     SistemaLinear *SL = alocaSistLinear(n, m);
     TabelasPontos *TP = alocaTabelaPontos(n, m);
     lerTabelaPontos(TP, n, m);
+
+    imprimeMatriz(TP->tabelaFuncoes, n, m);
+    printf("-------------------------------------------------\n");
+    matrizInterpolacao(SL,TP);
+    imprimeMatriz(SL->U, n, n);
+    printf("-------------------------------------------------\n");
+    triangulacao(SL, TP);
+    imprimeMatriz(SL->U, n, n);
+    
+    fatoracaoLU(SL,TP);
     imprimeResultado(SL, TP);
 
   }
