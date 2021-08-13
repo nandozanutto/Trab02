@@ -7,6 +7,8 @@ SistemaLinear *alocaSistLinear(unsigned int n, unsigned int m) {
   SL-> m = m;
   SL->L = (real_t*)malloc(m * n * sizeof(real_t));
   SL->U = (real_t*)malloc(m * n * sizeof(real_t));
+  SL->A = (real_t*)malloc(m * n * sizeof(real_t));
+
   SL->y = (real_t*)malloc(m * sizeof(real_t));
   SL->valores = (real_t*)malloc(m * sizeof(real_t));
 
@@ -97,62 +99,61 @@ void matrizInterpolacao(SistemaLinear *SL, TabelasPontos *TP) {
 }
 
 
-void matrizL(SistemaLinear *SL, TabelasPontos *TP) {
+void matrizL(SistemaLinear *SL, TabelasPontos *TP, int x) {
   int i, j;
   int n = SL->n;
-  SL->y[0] = TP->tabelaValores[0] ;
-  // printf("===========================\n");
-  // imprimeMatriz(SL->L, n, n);
-  // printf("===========================\n");
+  SL->y[0] = TP->tabelaFuncoes[0] ;
 
   for (i = 1; i < n; i++){
     real_t soma = 0;
     for (j = 0; j < n ; j++) {
       if (i != j) {
         soma += SL->y[j] * SL->L[(i * n) + j];
-        // printf("%f %f %d \n", SL->y[j] , SL->L[i * n + j], i * n + j);
-
       }
     }
-    // printf("%f\n", soma);
-    SL->y[i] = (TP->tabelaValores[i] - soma) /SL->L[i * n + i];
-   printf(" ==> %f\n",SL->y[i] );
+    SL->y[i] = (TP->tabelaFuncoes[i] - soma);
+
+
   }
+  printf("\n\n\n");
 }
 
-void matrizU(SistemaLinear *SL, TabelasPontos *TP) {
+void matrizU(SistemaLinear *SL, TabelasPontos *TP, int x) {
      int i, j;
      int n = SL->n;
      SL->valores[n-1] = SL->y[n-1]/SL->U[(n * n) -1];
-     printf("===========================\n");
-     imprimeMatriz(SL->U, n, n);
-     printf("===========================\n");
+     printf("=%f\n",SL->valores[n-1]);
+
      for (i = n - 2; i >= 0; i--) {
        real_t soma = 0;
        for (j = n - 1; j >= 0; j--){
-         if ((i!=j) && (SL->U[(i * n)+j] != 0.0)) {
-           soma += SL->U[(i * n) + j +1] * SL->y[j];
-           printf("----%f %f %d \n", SL->U[(i * n)+j] , SL->y[j], i * n +j);
-         }
-
-
+        if ((i!=j) && (SL->U[(i * n)+j] != 0.0)) {
+           soma += SL->U[(i * n) + j] * SL->y[j];
+           printf("---%f %f %d\n", SL->U[(i * n) + j], SL->y[j],(i * n) + j);
+        }
        }
-       SL->valores[i] = (SL->y[i] - soma)/ SL->U[i * n + i];
-        printf(" ==> %f\n",SL->valores[i] );
+       SL->valores[i] = (SL->y[i] - soma)/ SL->U[(n * n) -1];
+       printf("***%f %f\n", (SL->y[i] - soma), SL->U[(n * n) -1]);
+
      }
-
-
 }
 
 void fatoracaoLU(SistemaLinear *SL, TabelasPontos *TP) {
   int i;
   int n = SL->n;
 
-    matrizL(SL, TP);
-    matrizU(SL, TP);
+  //for (i = 0; i < n; i++) {
+    matrizL(SL, TP, i);
+    printf("VETOR Y:\n");
     for (i = 0; i < n; i++) {
-      printf(".%f\n", SL->valores[i]);
+      printf("%f\n",SL->y[i]);
     }
+    matrizU(SL, TP, i);
+  //}
+  for (i = 0; i < n; i++) {
+    printf("%f\n",SL->valores[i]);
+  }
+
 }
 
 
