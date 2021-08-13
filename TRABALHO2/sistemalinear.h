@@ -9,6 +9,7 @@ typedef float real_t;
 typedef struct {
     unsigned int n;
     unsigned int m;
+    real_t *x;
     real_t *L;
     real_t *U;
     real_t *y;
@@ -28,8 +29,8 @@ void matrizInterpolacao(SistemaLinear *SL, TabelasPontos *TP);
 void trocaLinha(SistemaLinear *SL, TabelasPontos *TP, int i, int iPivo);
 int encontraMax(SistemaLinear *SL, int i);
 void triangulacao(SistemaLinear *SL, TabelasPontos *TP);
-void matrizL(SistemaLinear *SL, TabelasPontos *TP);
-void matrizU(SistemaLinear *SL, TabelasPontos *TP);
+void matrizL(SistemaLinear *SL, real_t *funcoes);
+void matrizU(SistemaLinear *SL);
 void fatoracaoLU(SistemaLinear *SL,TabelasPontos *TP);
 void imprimeMatriz(real_t *matriz, unsigned int n, unsigned int m);
 void imprimeResultado(SistemaLinear *SL, TabelasPontos *TP);
