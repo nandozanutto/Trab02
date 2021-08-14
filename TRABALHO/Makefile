@@ -5,4 +5,4 @@ sistemalinear.o: sistemalinear.c
 main.o: main.c
 utils.o: utils.c
 clean:
-	rm -rf *.o sistemalinear
+	rm -rf *.o main
